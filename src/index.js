@@ -1,8 +1,9 @@
 require('./database');
 const app = require('./app');
-const loginRoutes = require('./routes/authentication/login-routes')
+const registerRoutes = require('./routes/authentication/register-routes'); 
 
-app.use('/login',loginRoutes);
+app.use('/register', registerRoutes);
+
 
 app.set('port', process.env.PORT || 3000);
 app.listen(app.get('port'));
