@@ -1,6 +1,10 @@
-exports.createIcome = (req, res) => {
+const categories = {}
+
+categories.createIcome = (req, res) => {
   res.send(req.body); 
 };
-exports.updateIcome = (req, res) => {
+categories.updateIcome = (req, res) => {
   res.send(req.body); 
 };
+
+module.exports = categories;
