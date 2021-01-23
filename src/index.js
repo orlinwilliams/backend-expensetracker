@@ -2,10 +2,13 @@ require('./database');
 const app = require('./app');
 const registerRoutes = require('./routes/authentication/register-routes'); 
 const loginRoutes = require('./routes/authentication/login-routes');
-const categoriesRoutes = require('./routes/categories/income-routes')
+const categoriesIncomeRoutes = require('./routes/categories/income-routes');
+const categoriesExpenseRoutes = require('./routes/categories/expense-routes');
+
 app.use('/register', registerRoutes);
 app.use('/login', loginRoutes);
-app.use('/categories', categoriesRoutes);
+app.use('/categories/income', categoriesIncomeRoutes);
+app.use('/categories/expense', categoriesExpenseRoutes);
 
 
 app.set('port', process.env.PORT || 3000);

@@ -2,7 +2,7 @@ const User = require('../../models/user-model');
 const mongoose = require('mongoose');
 const categories = {};
 
-categories.createIcome = async (req, res) => {
+categories.createIncome = async (req, res) => {
   try {
     const updateUser = await User.updateOne(
       { _id: req.params.idUser },
@@ -18,9 +18,6 @@ categories.createIcome = async (req, res) => {
   } catch (error) {
     res.status(400).json({ error });
   }
-};
-categories.updateIcome = (req, res) => {
-  res.send(req.body);
 };
 
 categories.getIncome = async (req, res) => {
@@ -44,7 +41,9 @@ categories.getAnIncome = async (req, res) => {
           req.params.idIncomeCategory
         ),
       },
-      {}
+      {
+        'incomeCategories.$':true
+      }
     );
     res.status(201).json({ error: false, data: income.incomeCategories[0] });
   } catch (error) {
@@ -62,7 +61,7 @@ categories.updateAnIncome = async (req, res) => {
       },
       { $set: { 'incomeCategories.$.title': req.body.title } }
     );
-    res.status(201).json({ error: false, income });
+    res.status(201).json({ error: false, data:income });
   } catch (error) {
     res.status(400).json({ error });
   }
@@ -81,7 +80,7 @@ categories.deleteAnIncome = async (req, res) => {
         },
       }
     );
-    res.status(201).json({ error: false, income });
+    res.status(201).json({ error: false, data:income });
   } catch (error) {
     res.status(400).json({ error });
   }
