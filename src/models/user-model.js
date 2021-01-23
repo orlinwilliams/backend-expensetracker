@@ -33,7 +33,7 @@ const userSchema = mongoose.Schema(
     expenses:[expenseSchema],
     income:[incomeSchema],
     expenseCategories:[categoryExpenseSchema],
-    IncomeCategories:[categoryIncomeSchema]
+    incomeCategories:[categoryIncomeSchema]
   },
   { timestamps: true }
 );

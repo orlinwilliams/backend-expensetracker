@@ -14,7 +14,12 @@ const register = async (req, res) => {
 
   try {
     const saveUser = await user.save();
-    res.status(201).json({ error: false, data: saveUser });
+    res
+      .status(201)
+      .json({
+        error: false,
+        data: { _id: saveUser._id, email: saveUser.email },
+      });
   } catch (error) {
     res.status(400).json({ error });
   }
