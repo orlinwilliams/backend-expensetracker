@@ -42,7 +42,7 @@ categories.getAnIncome = async (req, res) => {
         ),
       },
       {
-        'incomeCategories.$':true
+        'incomeCategories.$': true,
       }
     );
     res.status(201).json({ error: false, data: income.incomeCategories[0] });
@@ -50,6 +50,7 @@ categories.getAnIncome = async (req, res) => {
     res.status(400).json({ error });
   }
 };
+
 categories.updateAnIncome = async (req, res) => {
   try {
     const income = await User.updateOne(
@@ -61,11 +62,12 @@ categories.updateAnIncome = async (req, res) => {
       },
       { $set: { 'incomeCategories.$.title': req.body.title } }
     );
-    res.status(201).json({ error: false, data:income });
+    res.status(201).json({ error: false, data: income });
   } catch (error) {
     res.status(400).json({ error });
   }
 };
+
 categories.deleteAnIncome = async (req, res) => {
   try {
     const income = await User.updateOne(
@@ -75,12 +77,12 @@ categories.deleteAnIncome = async (req, res) => {
       {
         $pull: {
           incomeCategories: {
-            '_id': mongoose.Types.ObjectId(req.params.idIncomeCategory),
+            _id: mongoose.Types.ObjectId(req.params.idIncomeCategory),
           },
         },
       }
     );
-    res.status(201).json({ error: false, data:income });
+    res.status(201).json({ error: false, data: income });
   } catch (error) {
     res.status(400).json({ error });
   }

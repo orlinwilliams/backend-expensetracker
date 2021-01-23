@@ -41,8 +41,9 @@ categories.getAnExpense = async (req, res) => {
         'expenseCategories._id': mongoose.Types.ObjectId(
           req.params.idExpenseCategory
         ),
-      },{
-        'expenseCategories.$':true
+      },
+      {
+        'expenseCategories.$': true,
       }
     );
     res.status(201).json({ error: false, data: expense.expenseCategories[0] });
@@ -50,6 +51,7 @@ categories.getAnExpense = async (req, res) => {
     res.status(400).json({ error });
   }
 };
+
 categories.updateAnExpense = async (req, res) => {
   try {
     const expense = await User.updateOne(
@@ -66,11 +68,12 @@ categories.updateAnExpense = async (req, res) => {
         },
       }
     );
-    res.status(201).json({ error: false, data:expense });
+    res.status(201).json({ error: false, data: expense });
   } catch (error) {
     res.status(400).json({ error });
   }
 };
+
 categories.deleteAnExpense = async (req, res) => {
   try {
     const expense = await User.updateOne(
@@ -85,7 +88,7 @@ categories.deleteAnExpense = async (req, res) => {
         },
       }
     );
-    res.status(201).json({ error: false, data:expense });
+    res.status(201).json({ error: false, data: expense });
   } catch (error) {
     res.status(400).json({ error });
   }
