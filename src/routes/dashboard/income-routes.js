@@ -5,8 +5,8 @@ const verifyToken = require('../validate-token');
 
 router.post('/:idUser', verifyToken, dashboard.createIncome);
 router.get('/:idUser', verifyToken, dashboard.getIncome);
-// router.get('/:idUser/category/:idIncomeCategory', verifyToken, categories.getAnIncome);
-// router.put('/:idUser/category/:idIncomeCategory', verifyToken, categories.updateAnIncome);
+router.get('/:idUser/item/:idIncome', verifyToken, dashboard.getAnIncome);
+router.put('/:idUser/item/:idIncome', verifyToken, dashboard.updateAnIncome);
 router.delete('/:idUser/item/:idIncome', verifyToken, dashboard.deleteAnIncome);
 
 module.exports = router;

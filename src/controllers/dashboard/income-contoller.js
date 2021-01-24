@@ -34,6 +34,45 @@ dashboard.getIncome = async (req, res) => {
   }
 };
 
+dashboard.getAnIncome = async (req, res) => {
+  try {
+    const income = await User.findOne(
+      {
+        _id: req.params.idUser,
+        'income._id': mongoose.Types.ObjectId(req.params.idIncome),
+      },
+      {
+        'income.$': true,
+      }
+    );
+    res.status(201).json({ error: false, data: income.income[0] });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ error: true });
+  }
+};
+
+dashboard.updateAnIncome = async (req, res) => {
+  try {
+    const income = await User.updateOne(
+      {
+        _id: req.params.idUser,
+        'income._id': mongoose.Types.ObjectId(req.params.idIncome),
+      },
+      {
+        $set: {
+          'income.$.value': req.body.value,
+          'income.$.category': req.body.category,
+          'income.$.date': req.body.date,
+        },
+      }
+    );
+    res.status(201).json({ error: false, data: income });
+  } catch (error) {
+    res.status(400).json({ error });
+  }
+};
+
 dashboard.deleteAnIncome = async (req, res) => {
   try {
     const income = await User.updateOne(
