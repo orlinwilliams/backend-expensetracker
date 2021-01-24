@@ -6,7 +6,8 @@ dashboard.createIncome = async (req, res) => {
   const { value, category, date } = req.body;
   if (!value || !category || !date)
     return res.status(400).json({ error: 'not data' });
-
+  if(!validateFieldisObject(date))
+    return res.status(400).json({ error: 'not date' });
   try {
     const createIncome = await User.updateOne(
       { _id: req.params.idUser },
@@ -53,6 +54,11 @@ dashboard.getAnIncome = async (req, res) => {
 };
 
 dashboard.updateAnIncome = async (req, res) => {
+  const { value, category } = req.body;
+
+  if (!value || !category)
+    return res.status(400).json({ error: 'not data' });  
+
   try {
     const income = await User.updateOne(
       {
@@ -61,9 +67,8 @@ dashboard.updateAnIncome = async (req, res) => {
       },
       {
         $set: {
-          'income.$.value': req.body.value,
-          'income.$.category': req.body.category,
-          'income.$.date': req.body.date,
+          'income.$.value': value,
+          'income.$.category': category,          
         },
       }
     );
@@ -92,5 +97,10 @@ dashboard.deleteAnIncome = async (req, res) => {
     res.status(400).json({ error: true });
   }
 };
+const validateFieldisObject = (field) => {
+  if(typeof field != 'object') return false;
+  if(Object.keys(field).length === 0) return false;
+  return true;
+}
 
 module.exports = dashboard;

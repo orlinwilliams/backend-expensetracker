@@ -27,13 +27,6 @@ dashboard.createExpense = async (req, res) => {
   }
 };
 
-const validateFieldisObject = (field) => {
-  if(typeof field != 'object') return false;
-  if(Object.keys(field).length === 0) return false;
-  return true;
-}
-
-
 dashboard.getExpenses = async (req, res) => {
   try {
     const expense = await User.findOne(
@@ -109,5 +102,11 @@ dashboard.deleteAnExpense = async (req, res) => {
     res.status(400).json({ error: true });
   }
 };
+
+const validateFieldisObject = (field) => {
+  if(typeof field != 'object') return false;
+  if(Object.keys(field).length === 0) return false;
+  return true;
+}
 
 module.exports = dashboard;
