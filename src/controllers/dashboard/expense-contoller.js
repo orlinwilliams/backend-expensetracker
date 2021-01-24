@@ -34,7 +34,6 @@ const validateFieldisObject = (field) => {
 }
 
 
-
 dashboard.getExpenses = async (req, res) => {
   try {
     const expense = await User.findOne(
@@ -58,13 +57,20 @@ dashboard.getAnExpense = async (req, res) => {
         'expenses.$': true,
       }
     );
-    res.status(201).json({ error: false, data: expense.expense[0] });
+    res.status(201).json({ error: false, data: expense.expenses[0] });
   } catch (error) {    
     res.status(400).json({ error: true });
   }
 };
 
 dashboard.updateAnExpense = async (req, res) => {
+  const { value, category } = req.body;
+
+  if (!value || !category)
+    return res.status(400).json({ error: 'not data' });
+  if(!validateFieldisObject(category))
+    return res.status(400).json({ error: 'not category' });
+  
   try {
     const expense = await User.updateOne(
       {
@@ -73,9 +79,8 @@ dashboard.updateAnExpense = async (req, res) => {
       },
       {
         $set: {
-          'expenes.$.value': req.body.value,
-          'expenes.$.category': req.body.category,
-          'expenes.$.date': req.body.date,
+          'expenses.$.value': value,
+          'expenses.$.category': category      
         },
       }
     );
