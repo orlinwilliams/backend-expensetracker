@@ -21,7 +21,7 @@ const login = async (req, res) => {
 
   const token = generateAccessToken({ user });
 
-  if (token) res.json({ token, data: { email: user.email, _id: user._id } });
+  if (token) res.json({ token, email: user.email, _id: user._id  });
 };
 const generateAccessToken = (user) => {
   return jwt.sign(user, config.secret, { expiresIn: '1d' });
