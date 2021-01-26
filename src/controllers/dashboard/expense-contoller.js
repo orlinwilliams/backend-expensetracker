@@ -29,11 +29,31 @@ dashboard.createExpense = async (req, res) => {
 
 dashboard.getExpenses = async (req, res) => {
   try {
-    const expense = await User.findOne(
-      { _id: req.params.idUser },
-      { expenses: true }
-    );
-    res.status(201).json({ error: false, data: expense });
+    const expenses = await User.aggregate([
+      {
+        $match: {
+          'expenses.date.month': parseInt(req.params.month),
+          'expenses.date.year': parseInt(req.params.year),
+        },
+      },
+      {
+        $unwind: '$expenses',
+      },
+      {
+        $match: {
+          'expenses.date.month': parseInt(req.params.month),
+          'expenses.date.year': parseInt(req.params.year),
+        },
+      },
+      {
+        $project: {
+          value: '$expenses.value',
+          category: '$expenses.category',
+          date: '$expenses.date',
+        },
+      },
+    ]);
+    res.status(201).json({ error: false, data: expenses });
   } catch (error) {
     res.status(400).json({ error });
   }
