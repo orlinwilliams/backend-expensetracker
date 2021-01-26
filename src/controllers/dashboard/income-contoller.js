@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { aggregate } = require('../../models/user-model');
 const User = require('../../models/user-model');
 const dashboard = {};
 
@@ -6,7 +7,7 @@ dashboard.createIncome = async (req, res) => {
   const { value, category, date } = req.body;
   if (!value || !category || !date)
     return res.status(400).json({ error: 'not data' });
-  if(!validateFieldisObject(date))
+  if (!validateFieldisObject(date))
     return res.status(400).json({ error: 'not date' });
   try {
     const createIncome = await User.updateOne(
@@ -24,13 +25,36 @@ dashboard.createIncome = async (req, res) => {
 };
 
 dashboard.getIncome = async (req, res) => {
+  console.log(typeof req.params.month, req.params.year);
+
   try {
-    const income = await User.findOne(
-      { _id: req.params.idUser },
-      { income: true }
-    );
+    const income = await User.aggregate([
+      {
+        $match: {
+          'income.date.month': parseInt(req.params.month),
+          'income.date.year': parseInt(req.params.year),
+        },
+      },
+      {
+        $unwind: '$income',
+      },
+      {
+        $match: {
+          'income.date.month': parseInt(req.params.month),
+          'income.date.year': parseInt(req.params.year),
+        },
+      },
+      {
+        $project: {
+          value: '$income.value',
+          category: '$income.category',
+          date: '$income.date',
+        },
+      },
+    ]);
     res.status(201).json({ error: false, data: income });
   } catch (error) {
+    console.log(error);
     res.status(400).json({ error });
   }
 };
@@ -56,8 +80,7 @@ dashboard.getAnIncome = async (req, res) => {
 dashboard.updateAnIncome = async (req, res) => {
   const { value, category } = req.body;
 
-  if (!value || !category)
-    return res.status(400).json({ error: 'not data' });  
+  if (!value || !category) return res.status(400).json({ error: 'not data' });
 
   try {
     const income = await User.updateOne(
@@ -68,7 +91,7 @@ dashboard.updateAnIncome = async (req, res) => {
       {
         $set: {
           'income.$.value': value,
-          'income.$.category': category,          
+          'income.$.category': category,
         },
       }
     );
@@ -98,9 +121,9 @@ dashboard.deleteAnIncome = async (req, res) => {
   }
 };
 const validateFieldisObject = (field) => {
-  if(typeof field != 'object') return false;
-  if(Object.keys(field).length === 0) return false;
+  if (typeof field != 'object') return false;
+  if (Object.keys(field).length === 0) return false;
   return true;
-}
+};
 
 module.exports = dashboard;
