@@ -25,8 +25,6 @@ dashboard.createIncome = async (req, res) => {
 };
 
 dashboard.getIncome = async (req, res) => {
-  console.log(typeof req.params.month, req.params.year);
-
   try {
     const income = await User.aggregate([
       {
@@ -46,12 +44,14 @@ dashboard.getIncome = async (req, res) => {
       },
       {
         $project: {
+          _idIncome:'$income._id',
           value: '$income.value',
           category: '$income.category',
           date: '$income.date',
         },
       },
     ]);
+    console.log(income);
     res.status(201).json({ error: false, data: income });
   } catch (error) {
     console.log(error);
