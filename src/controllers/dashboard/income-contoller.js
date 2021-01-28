@@ -51,7 +51,7 @@ dashboard.getIncome = async (req, res) => {
         },
       },
     ]);
-    console.log(income);
+    
     res.status(201).json({ error: false, data: income });
   } catch (error) {
     console.log(error);

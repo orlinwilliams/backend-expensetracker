@@ -7,9 +7,9 @@ dashboard.createExpense = async (req, res) => {
 
   if (!value || !category || !date)
     return res.status(400).json({ error: 'not data' });
-  if(!validateFieldisObject(category))
+  if (!validateFieldisObject(category))
     return res.status(400).json({ error: 'not category' });
-  if(!validateFieldisObject(date))
+  if (!validateFieldisObject(date))
     return res.status(400).json({ error: 'not date' });
 
   try {
@@ -17,7 +17,15 @@ dashboard.createExpense = async (req, res) => {
       { _id: req.params.idUser },
       {
         $push: {
-          expenses: req.body,
+          expenses: {
+            value:value,
+            category: {
+              _id: category._id,
+              title: category.title,
+              limit: category.limit,
+            },
+            date:date
+          },
         },
       }
     );
@@ -47,6 +55,7 @@ dashboard.getExpenses = async (req, res) => {
       },
       {
         $project: {
+          _idExpense: '$expenses._id',
           value: '$expenses.value',
           category: '$expenses.category',
           date: '$expenses.date',
@@ -71,7 +80,7 @@ dashboard.getAnExpense = async (req, res) => {
       }
     );
     res.status(201).json({ error: false, data: expense.expenses[0] });
-  } catch (error) {    
+  } catch (error) {
     res.status(400).json({ error: true });
   }
 };
@@ -79,11 +88,10 @@ dashboard.getAnExpense = async (req, res) => {
 dashboard.updateAnExpense = async (req, res) => {
   const { value, category } = req.body;
 
-  if (!value || !category)
-    return res.status(400).json({ error: 'not data' });
-  if(!validateFieldisObject(category))
+  if (!value || !category) return res.status(400).json({ error: 'not data' });
+  if (!validateFieldisObject(category))
     return res.status(400).json({ error: 'not category' });
-  
+
   try {
     const expense = await User.updateOne(
       {
@@ -93,7 +101,7 @@ dashboard.updateAnExpense = async (req, res) => {
       {
         $set: {
           'expenses.$.value': value,
-          'expenses.$.category': category      
+          'expenses.$.category': category,
         },
       }
     );
@@ -124,9 +132,9 @@ dashboard.deleteAnExpense = async (req, res) => {
 };
 
 const validateFieldisObject = (field) => {
-  if(typeof field != 'object') return false;
-  if(Object.keys(field).length === 0) return false;
+  if (typeof field != 'object') return false;
+  if (Object.keys(field).length === 0) return false;
   return true;
-}
+};
 
 module.exports = dashboard;
