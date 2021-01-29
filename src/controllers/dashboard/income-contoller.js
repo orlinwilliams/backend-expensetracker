@@ -29,6 +29,7 @@ dashboard.getIncome = async (req, res) => {
     const income = await User.aggregate([
       {
         $match: {
+          _id: mongoose.Types.ObjectId(req.params.idUser),
           'income.date.month': parseInt(req.params.month),
           'income.date.year': parseInt(req.params.year),
         },
@@ -38,6 +39,7 @@ dashboard.getIncome = async (req, res) => {
       },
       {
         $match: {
+          _id: mongoose.Types.ObjectId(req.params.idUser),
           'income.date.month': parseInt(req.params.month),
           'income.date.year': parseInt(req.params.year),
         },

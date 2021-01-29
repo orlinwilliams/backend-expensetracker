@@ -36,10 +36,12 @@ dashboard.createExpense = async (req, res) => {
 };
 
 dashboard.getExpenses = async (req, res) => {
+  
   try {
     const expenses = await User.aggregate([
       {
         $match: {
+          _id: mongoose.Types.ObjectId(req.params.idUser),
           'expenses.date.month': parseInt(req.params.month),
           'expenses.date.year': parseInt(req.params.year),
         },
@@ -49,12 +51,13 @@ dashboard.getExpenses = async (req, res) => {
       },
       {
         $match: {
+          _id: mongoose.Types.ObjectId(req.params.idUser),
           'expenses.date.month': parseInt(req.params.month),
           'expenses.date.year': parseInt(req.params.year),
         },
       },
       {
-        $project: {
+        $project: {          
           _idExpense: '$expenses._id',
           value: '$expenses.value',
           category: '$expenses.category',
