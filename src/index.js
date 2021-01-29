@@ -10,7 +10,7 @@ const categoriesExpenseRoutes = require('./routes/categories/expense-routes');
 const dashboardIncomeRoutes = require('./routes/dashboard/income-routes');
 const dashboardExpenseRoutes = require('./routes/dashboard/expense-routes');
 
-//app.use(express.static( path.join(__dirname + '/public')))
+app.use(express.static( path.join(__dirname + '/public')))
 app.use('/register', registerRoutes);
 app.use('/login', loginRoutes);
 
@@ -19,6 +19,7 @@ app.use('/categories/expense', categoriesExpenseRoutes);
 
 app.use('/dashboard/income', dashboardIncomeRoutes);
 app.use('/dashboard/expense', dashboardExpenseRoutes);
+app.get('*', (req, res) => res.sendFile(path.join(__dirname + '/public/index.html')) );
 
 
 app.set('port', process.env.PORT || 3000);
