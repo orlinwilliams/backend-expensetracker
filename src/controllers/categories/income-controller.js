@@ -64,43 +64,11 @@ categories.updateAnIncome = async (req, res) => {
     );
     res.status(201).json({ error: false, data: income });
   } catch (error) {
-    res.status(400).json({ error });
-  }
-};
-//Find income to update
-const expensesFound = async (titleCategoryIncome) => {
-  try {
-    //training find
-    const searchIncome = await User.aggregate([
-      {
-        $match: {
-          'income.category': titleCategoryIncome,
-        },
-      },
-      {
-        $unwind: '$income',
-      },
-      {
-        $match: {
-          'income.category': titleCategoryIncome,
-        },
-      },
-      {
-        $project: {
-          _idIncome: '$income._id',
-          value: '$income.value',
-          category: '$income.category',
-          date: '$income.date',
-        },
-      },
-    ]);
-    if (searchIncome) {
-      return searchIncome;
-    }
-  } catch (error) {
     console.log(error);
+    res.status(400).json({ error: true });
   }
 };
+
 categories.deleteAnIncome = async (req, res) => {
   try {
     const income = await User.updateOne(

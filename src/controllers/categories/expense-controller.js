@@ -71,28 +71,35 @@ categories.updateAnExpense = async (req, res) => {
 
     //found expenses to update
     const expensesFoundToUpdate = await expensesFound(
+      req.params.idUser,
       req.params.idExpenseCategory
     );
-    console.log(expensesFoundToUpdate);
-    //updating
-    updateExpenseFound(
-      expensesFoundToUpdate,
-      req.params.idUser,
-      req.body.title,
-      req.body.limit
-    );
+    if (!expensesFoundToUpdate)
+      return res
+        .status(400)
+        .json({ error: true, message: 'No expenses to update' });
+    if (expensesFoundToUpdate.length > 0) {
+      //updating
+      updateExpenseFound(
+        expensesFoundToUpdate,
+        req.params.idUser,
+        req.body.title,
+        req.body.limit
+      );
+    }
 
     res.status(201).json({ error: false, data: expense });
   } catch (error) {
     res.status(400).json({ error });
   }
 };
-const expensesFound = async (idCategoryExpense) => {
+const expensesFound = async (idUser, idCategoryExpense) => {
   try {
     //training find
     const searchExpenses = await User.aggregate([
       {
         $match: {
+          _id: mongoose.Types.ObjectId(idUser),
           'expenses.category._id': idCategoryExpense,
         },
       },
@@ -101,6 +108,7 @@ const expensesFound = async (idCategoryExpense) => {
       },
       {
         $match: {
+          _id: mongoose.Types.ObjectId(idUser),
           'expenses.category._id': idCategoryExpense,
         },
       },
@@ -128,7 +136,7 @@ const updateExpenseFound = async (
 ) => {
   try {
     expensesFound.forEach(async (item) => {
-      const updateAnExense = await User.updateOne(
+      const updateAnExpense = await User.updateOne(
         {
           _id: idUser,
           'expenses._id': mongoose.Types.ObjectId(item._idExpense),
