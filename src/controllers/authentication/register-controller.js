@@ -1,7 +1,7 @@
 const bcryptjs = require('bcryptjs');
 const User = require('../../models/user-model');
 
-const register = async (req, res) => {
+const register = async (req, res) => {  
   const emailExist = await User.findOne({ email: req.body.email });
   if (emailExist) return res.status(400).json({ error: true, message:'mail already exists'});
 
@@ -11,9 +11,10 @@ const register = async (req, res) => {
     email: req.body.email,
     password,
   });
-
+  console.log(user);
   try {
     const saveUser = await user.save();
+    console.log(saveUser);
     res
       .status(201)
       .json({
@@ -21,7 +22,8 @@ const register = async (req, res) => {
         data: { _id: saveUser._id, email: saveUser.email },
       });
   } catch (error) {
-    res.status(400).json({ error });
+    console.log(error);
+    res.status(400).json({ error:true, message:'error register' });
   }
 };
 
