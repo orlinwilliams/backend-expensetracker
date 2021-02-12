@@ -1,2 +1,4 @@
 .env
 .prettierrc
+# dependencies
+/node_modules
